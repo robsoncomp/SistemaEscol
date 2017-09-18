@@ -17,7 +17,7 @@ namespace SisAlunos.Controllers
         {
             return View();
         }
-
+        //teste
         public ActionResult Criar()
         {
             ViewBag.CidadeID = new SelectList(db.Cidades, "CidadeID", "NomeCidade");
