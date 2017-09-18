@@ -1,0 +1,86 @@
+﻿<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/grid-0.4.3.min.css" rel="stylesheet" type="text/css">
+@Scripts.Render("~/bundles/GridJs")
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var grid;
+        var gridAlunos;
+
+        function verAlunos(e) {
+            gridAlunos.reload({ id: e.data.id });
+            $("#AlunosCidadeModal").modal("show");
+        }
+        function search() {
+            grid.reload({ searchString: $("#search").val() });
+        }
+
+
+        grid = $("#grid").grid({
+            dataKey: "ID",
+            uiLibrary: "bootstrap",
+            columns: [
+                { field: "ID", width: 50, sortable: true },
+                { field: "Nome", sortable: true },
+                { field: "Estado", title: "Estado", sortable: true },
+                { field: "CEP", title: "CEP", sortable: true },
+                { field: "NumeroAlunos", title: "Nº Alunos", sortable: true },
+                { title: "", field: "Alunos", width: 34, type: "icon", icon: "glyphicon-zoom-in", tooltip: "Ver Alunos", events: { "click": verAlunos } }
+            ],
+            pager: { enable: true, limit: 5, sizes: [2, 5, 10, 20] }
+        });
+        $("#btnSearch").on("click", search);
+
+        gridAlunos = $("#gridAlunos").grid({
+            dataKey: "ID",
+            uiLibrary: "bootstrap",
+            columns: [
+                { field: "ID", width: 50, sortable: true },
+                { field: "Nome", sortable: true },
+                { field: "CPF", title: "CPF", sortable: true },
+                { field: "Sexo", title: "Sexo" },
+            ],
+            pager: { enable: true, limit: 10, sizes: [2, 5, 10, 20] }
+        });
+
+
+    });
+</script>
+
+
+<div class="container ">
+    <h2>Cidades/Alunos</h2>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" id="search" class="form-control" placeholder="Procurar...">
+                <span class="input-group-btn">
+                    <button type="button" id="btnSearch" class="btn btn-default">Ir!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table id="grid" data-source="@Url.Action("GetCidades")"></table>
+</div>
+
+
+<div class="modal fade" id="AlunosCidadeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Alunos Cadastrados</h4>
+            </div>
+            <div class="modal-body">
+                <table id="gridAlunos" data-source="@Url.Action("GetAlunosPorCidade","Alunos")"></table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>

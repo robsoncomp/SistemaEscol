@@ -1,0 +1,63 @@
+﻿<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/grid-0.4.3.min.css" rel="stylesheet" type="text/css">
+@Scripts.Render("~/bundles/GridJs")
+
+
+<script type="text/javascript">
+    var grid;
+    function Add() {
+        window.location.assign("Criar");
+    }
+    function Edit(e) {
+        window.location.assign("Editar/" +e.data.id);
+    }
+    function Remove(e) {
+        window.location.assign("Excluir/" + e.data.id);
+    }
+    function Search() {
+        grid.reload({ searchString: $("#search").val() });
+    }
+
+    $(document).ready(function () {
+        grid = $("#grid").grid({
+            dataKey: "ID",
+            uiLibrary: "bootstrap",
+            columns: [
+                { field: "ID", width: 50, sortable: true },
+                { field: "Nome", sortable: true },
+                { field: "Estado", title: "Estado", sortable: true },
+                { field: "CEP", title: "CEP", sortable: true },
+                { title: "", field: "Editar", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Editar", events: { "click": Edit } },
+                { title: "", field: "Excluir", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Excluir", events: { "click": Remove } }
+            ],
+            pager: { enable: true, limit: 5, sizes: [2, 5, 10, 20] }
+        });
+        $("#btnAddPlayer").on("click", Add);
+        $("#btnSave").on("click", Save);
+        $("#btnSearch").on("click", Search);
+    });
+</script>
+
+
+<div class="container ">
+    <h2>Cidades Cadastradas</h2>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" id="search" class="form-control" placeholder="Procurar...">
+                <span class="input-group-btn">
+                    <button type="button" id="btnSearch" class="btn btn-default">Ir!</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <button type="button" id="btnAddPlayer" class="btn btn-default pull-right">Nova Cidade</button>
+        </div>
+    </div>
+    <br />
+    <table id="grid" data-source="@Url.Action("GetCidades")"></table>
+</div>
+
+

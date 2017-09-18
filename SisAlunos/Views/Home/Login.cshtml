@@ -1,0 +1,45 @@
+﻿@model  SisAlunos.Views.ViewModel.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = "../Shared/_LayoutVazio.cshtml";
+}
+<div>
+    <p align="center">
+        <h2>Sistema de Alunos</h2>
+    </p>
+</div>
+<hr>
+<div style="width: 400px; height: 250px;">
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post))
+{
+    <div id="FormLogin">
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+      
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" }) 
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Senha, htmlAttributes: new { @class = "control-label col-md-2" }) 
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Senha, new { htmlAttributes = new { @class = "form-control", type = "password" } })
+                @Html.ValidationMessageFor(model => model.Senha, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div>&nbsp;</div>
+        <div class="form-group" style="padding-left: 100px;">
+            <button type="submit">Login</button>
+            <button type="button">Limpar</button>
+        </div>
+    </div>
+}
+    @Html.ActionLink("Me inscrever", "Cadastro", "Usuarios")
+</div>
+
+    

@@ -1,0 +1,171 @@
+﻿@model SisAlunos.Views.ViewModel.ResponsavelAlunoViewModel
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+<link href="~/Content/grid-0.4.3.min.css" rel="stylesheet" type="text/css">
+@Scripts.Render("~/bundles/GridJs")
+
+<script type="text/javascript">
+    var grid;
+    function Add() {
+        window.location.assign("Criar");
+    }
+    function AddResponsavel(e) {
+        $("#AlunoID").val(e.data.id),
+        $("#Nome").val(""),
+        $("#RG").val(""),
+        $("#CPF").val(""),
+        $("#Profissao").val(""),
+        $("#TipoParentesco").val(""),
+        $("#Celular").val(""),
+        $("#ResponsavelModal").modal("show");
+    }
+    function Edit(e) {
+        window.location.assign("Editar/" + e.data.id);
+    }
+    function Remove(e) {
+        window.location.assign("Excluir/" + e.data.id);
+    }
+    function Search() {
+        grid.reload({ searchString: $("#search").val() });
+    }
+    function SaveResponsavel() {
+        var responsavel = {
+            AlunoID: $("#AlunoID").val(),
+            Nome: $("#Nome").val(),
+            RG: $("#RG").val(),
+            CPF: $("#CPF").val(),
+            Profissao: $("#Profissao").val(),
+            TipoParentesco: $("#TipoParentesco").val(),
+            Celular: $("#Celular").val()
+        };
+        $.ajax({ url: "SalvarResponsavelAluno", type: "POST", data: { responsavel } })
+            .done(function () {
+                window.location.assign("Index");
+                $("#ResponsavelModal").modal("hide");
+            })
+            .fail(function () {
+                alert("Erro ao salvar responsavel.");
+                window.location.assign("Index");
+                $("#ResponsavelModal").modal("hide");
+            });
+
+    }
+    $(document).ready(function () {
+        grid = $("#grid").grid({
+            dataKey: "ID",
+            uiLibrary: "bootstrap",
+            columns: [
+                { field: "ID", width: 50, sortable: true },
+                { field: "Nome", sortable: true },
+                { field: "CPF", title: "CPF", sortable: true },
+                { field: "Sexo", title: "Sexo" },
+                { field: "TelefoneFixo", title: "Telefone" },
+                { field: "DataCadastro", title: "Dt Cadastro", sortable: true },
+                { field: "Cidade", title: "Cidade", sortable: true },
+
+                { title: "", field: "Add Resp.", width: 34, type: "icon", icon: "glyphicon-plus", tooltip: "Add Resp.", events: { "click": AddResponsavel } },
+                { title: "", field: "Editar", width: 34, type: "icon", icon: "glyphicon-pencil", tooltip: "Editar", events: { "click": Edit } },
+                { title: "", field: "Excluir", width: 34, type: "icon", icon: "glyphicon-remove", tooltip: "Excluir", events: { "click": Remove } }
+            ],
+            pager: { enable: true, limit: 10, sizes: [2, 5, 10, 20] }
+        });
+        $("#btnAdd").on("click", Add);
+        $("#btnSearch").on("click", Search);
+        $("#btnSave").on("click", SaveResponsavel);
+    });
+</script>
+
+
+<div class="container ">
+    <h2>Alunos Cadastrados</h2>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <input type="text" id="search" class="form-control" placeholder="Procurar...">
+                <span class="input-group-btn">
+                    <button type="button" id="btnSearch" class="btn btn-default">Ir!</button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <button type="button" id="btnAdd" class="btn btn-default pull-right">Novo Aluno</button>
+        </div>
+    </div>
+    <br />
+    <table id="grid" data-source="@Url.Action("GetAlunos")"></table>
+</div>
+
+
+<div class="modal fade" id="ResponsavelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Responsável do Aluno</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.AntiForgeryToken()
+
+                    @Html.HiddenFor(x => x.AlunoID)
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CPF, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.CPF, new { htmlAttributes = new { @class = "form-control", @maxlength = "11", placeholder = "Somente números" } })
+                                @Html.ValidationMessageFor(model => model.CPF, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TipoParentesco, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EnumDropDownListFor(model => model.TipoParentesco, "Selecione...", new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TipoParentesco, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.RG, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.RG, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.RG, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Profissao, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Profissao, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Profissao, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Celular, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.Celular, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Celular, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" id="btnSave" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

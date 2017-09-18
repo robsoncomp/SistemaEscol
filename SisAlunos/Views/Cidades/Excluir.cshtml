@@ -1,0 +1,45 @@
+﻿@model SisAlunos.Views.ViewModel.CidadeViewModel
+
+@{
+    ViewBag.Title = "Excluir Cidade";
+}
+<h3>Deseja Excluir essa cidade?</h3>
+<div>
+    <h2>@ViewBag.Title</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.NomeCidade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NomeCidade)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Estado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Estado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CEP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CEP)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Excluir" class="btn btn-danger" />
+        </div>
+    }
+</div>

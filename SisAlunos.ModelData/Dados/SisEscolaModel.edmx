@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EscolaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Alunos">
+          <Key>
+            <PropertyRef Name="AlunoID" />
+          </Key>
+          <Property Name="AlunoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CPF" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Sexo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="CidadeID" Type="int" Nullable="false" />
+          <Property Name="RG" Type="varchar" MaxLength="20" />
+          <Property Name="DataNascimento" Type="datetime" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="Endereco" Type="varchar" MaxLength="100" />
+          <Property Name="Matricula" Type="varchar" MaxLength="50" />
+          <Property Name="TelefoneFixo" Type="varchar" MaxLength="20" />
+          <Property Name="TelefoneCelular" Type="varchar" MaxLength="50" />
+          <Property Name="DataCadastro" Type="datetime" Nullable="false" />
+          <Property Name="DataUltimaAlteracao" Type="datetime" Nullable="false" />
+          <Property Name="NomeUsuarioAlteracao" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Cidades">
+          <Key>
+            <PropertyRef Name="CidadeID" />
+          </Key>
+          <Property Name="CidadeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NomeCidade" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Estado" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CEP" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Responsaveis">
+          <Key>
+            <PropertyRef Name="ResponsavelID" />
+          </Key>
+          <Property Name="ResponsavelID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="RG" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CPF" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Profissao" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Celular" Type="varchar" MaxLength="20" />
+          <Property Name="DataCadastro" Type="datetime" Nullable="false" />
+          <Property Name="TipoParentesco" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AlunoID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="UsuarioID" />
+          </Key>
+          <Property Name="UsuarioID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CPF" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Sexo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="DataCadastro" Type="datetime" Nullable="false" />
+          <Property Name="CidadeID" Type="int" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Senha" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Alunos_Cidades">
+          <End Role="Cidades" Type="Self.Cidades" Multiplicity="1" />
+          <End Role="Alunos" Type="Self.Alunos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidades">
+              <PropertyRef Name="CidadeID" />
+            </Principal>
+            <Dependent Role="Alunos">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Responsaveis_Alunos">
+          <End Role="Alunos" Type="Self.Alunos" Multiplicity="1" />
+          <End Role="Responsaveis" Type="Self.Responsaveis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alunos">
+              <PropertyRef Name="AlunoID" />
+            </Principal>
+            <Dependent Role="Responsaveis">
+              <PropertyRef Name="AlunoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Cidades">
+          <End Role="Cidades" Type="Self.Cidades" Multiplicity="1" />
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidades">
+              <PropertyRef Name="CidadeID" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EscolaModelStoreContainer">
+          <EntitySet Name="Alunos" EntityType="Self.Alunos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cidades" EntityType="Self.Cidades" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Responsaveis" EntityType="Self.Responsaveis" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Alunos_Cidades" Association="Self.FK_Alunos_Cidades">
+            <End Role="Cidades" EntitySet="Cidades" />
+            <End Role="Alunos" EntitySet="Alunos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Responsaveis_Alunos" Association="Self.FK_Responsaveis_Alunos">
+            <End Role="Alunos" EntitySet="Alunos" />
+            <End Role="Responsaveis" EntitySet="Responsaveis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Cidades" Association="Self.FK_Usuarios_Cidades">
+            <End Role="Cidades" EntitySet="Cidades" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EscolaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="EscolaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Alunos" EntityType="EscolaModel.Alunos" />
+          <EntitySet Name="Cidades" EntityType="EscolaModel.Cidades" />
+          <EntitySet Name="Responsaveis" EntityType="EscolaModel.Responsaveis" />
+          <EntitySet Name="Usuarios" EntityType="EscolaModel.Usuarios" />
+          <AssociationSet Name="FK_Alunos_Cidades" Association="EscolaModel.FK_Alunos_Cidades">
+            <End Role="Cidades" EntitySet="Cidades" />
+            <End Role="Alunos" EntitySet="Alunos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Responsaveis_Alunos" Association="EscolaModel.FK_Responsaveis_Alunos">
+            <End Role="Alunos" EntitySet="Alunos" />
+            <End Role="Responsaveis" EntitySet="Responsaveis" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuarios_Cidades" Association="EscolaModel.FK_Usuarios_Cidades">
+            <End Role="Cidades" EntitySet="Cidades" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Alunos">
+          <Key>
+            <PropertyRef Name="AlunoID" />
+          </Key>
+          <Property Name="AlunoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CPF" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="Sexo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CidadeID" Type="Int32" Nullable="false" />
+          <Property Name="RG" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DataNascimento" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Endereco" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Matricula" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TelefoneFixo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="TelefoneCelular" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DataCadastro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DataUltimaAlteracao" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NomeUsuarioAlteracao" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cidades" Relationship="EscolaModel.FK_Alunos_Cidades" FromRole="Alunos" ToRole="Cidades" />
+          <NavigationProperty Name="Responsaveis" Relationship="EscolaModel.FK_Responsaveis_Alunos" FromRole="Alunos" ToRole="Responsaveis" />
+        </EntityType>
+        <EntityType Name="Cidades">
+          <Key>
+            <PropertyRef Name="CidadeID" />
+          </Key>
+          <Property Name="CidadeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NomeCidade" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CEP" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Alunos" Relationship="EscolaModel.FK_Alunos_Cidades" FromRole="Cidades" ToRole="Alunos" />
+          <NavigationProperty Name="Usuarios" Relationship="EscolaModel.FK_Usuarios_Cidades" FromRole="Cidades" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="Responsaveis">
+          <Key>
+            <PropertyRef Name="ResponsavelID" />
+          </Key>
+          <Property Name="ResponsavelID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RG" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CPF" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="Profissao" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Celular" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DataCadastro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TipoParentesco" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AlunoID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Alunos" Relationship="EscolaModel.FK_Responsaveis_Alunos" FromRole="Responsaveis" ToRole="Alunos" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="UsuarioID" />
+          </Key>
+          <Property Name="UsuarioID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CPF" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="Sexo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DataCadastro" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CidadeID" Type="Int32" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Senha" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Cidades" Relationship="EscolaModel.FK_Usuarios_Cidades" FromRole="Usuarios" ToRole="Cidades" />
+        </EntityType>
+        <Association Name="FK_Alunos_Cidades">
+          <End Type="EscolaModel.Cidades" Role="Cidades" Multiplicity="1" />
+          <End Type="EscolaModel.Alunos" Role="Alunos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidades">
+              <PropertyRef Name="CidadeID" />
+            </Principal>
+            <Dependent Role="Alunos">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Responsaveis_Alunos">
+          <End Type="EscolaModel.Alunos" Role="Alunos" Multiplicity="1" />
+          <End Type="EscolaModel.Responsaveis" Role="Responsaveis" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Alunos">
+              <PropertyRef Name="AlunoID" />
+            </Principal>
+            <Dependent Role="Responsaveis">
+              <PropertyRef Name="AlunoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuarios_Cidades">
+          <End Type="EscolaModel.Cidades" Role="Cidades" Multiplicity="1" />
+          <End Type="EscolaModel.Usuarios" Role="Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cidades">
+              <PropertyRef Name="CidadeID" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="CidadeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EscolaModelStoreContainer" CdmEntityContainer="EscolaEntities">
+          <EntitySetMapping Name="Alunos">
+            <EntityTypeMapping TypeName="EscolaModel.Alunos">
+              <MappingFragment StoreEntitySet="Alunos">
+                <ScalarProperty Name="NomeUsuarioAlteracao" ColumnName="NomeUsuarioAlteracao" />
+                <ScalarProperty Name="DataUltimaAlteracao" ColumnName="DataUltimaAlteracao" />
+                <ScalarProperty Name="DataCadastro" ColumnName="DataCadastro" />
+                <ScalarProperty Name="TelefoneCelular" ColumnName="TelefoneCelular" />
+                <ScalarProperty Name="TelefoneFixo" ColumnName="TelefoneFixo" />
+                <ScalarProperty Name="Matricula" ColumnName="Matricula" />
+                <ScalarProperty Name="Endereco" ColumnName="Endereco" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DataNascimento" ColumnName="DataNascimento" />
+                <ScalarProperty Name="RG" ColumnName="RG" />
+                <ScalarProperty Name="CidadeID" ColumnName="CidadeID" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="AlunoID" ColumnName="AlunoID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cidades">
+            <EntityTypeMapping TypeName="EscolaModel.Cidades">
+              <MappingFragment StoreEntitySet="Cidades">
+                <ScalarProperty Name="CEP" ColumnName="CEP" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="NomeCidade" ColumnName="NomeCidade" />
+                <ScalarProperty Name="CidadeID" ColumnName="CidadeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Responsaveis">
+            <EntityTypeMapping TypeName="EscolaModel.Responsaveis">
+              <MappingFragment StoreEntitySet="Responsaveis">
+                <ScalarProperty Name="AlunoID" ColumnName="AlunoID" />
+                <ScalarProperty Name="TipoParentesco" ColumnName="TipoParentesco" />
+                <ScalarProperty Name="DataCadastro" ColumnName="DataCadastro" />
+                <ScalarProperty Name="Celular" ColumnName="Celular" />
+                <ScalarProperty Name="Profissao" ColumnName="Profissao" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="RG" ColumnName="RG" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="ResponsavelID" ColumnName="ResponsavelID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="EscolaModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="Senha" ColumnName="Senha" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="CidadeID" ColumnName="CidadeID" />
+                <ScalarProperty Name="DataCadastro" ColumnName="DataCadastro" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="UsuarioID" ColumnName="UsuarioID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

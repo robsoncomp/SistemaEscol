@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Gráficos";
+}
+<style type="text/css">
+    #graficoAlunosCidade, #graficoCadastroData {
+        height: 450px;
+        width: 520px;
+        align-content: center;
+        box-shadow: 2px 2px 2px 2px grey;
+        padding: 10px;
+    }
+</style>
+<h2>@ViewBag.Title</h2>
+
+<div id="graficos">
+    <div id="graficoAlunosCidade" style="float: left" ></div>
+    <div id="graficoCadastroData" style="float: right" ></div>
+</div>
+<div><br/></div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script>
+    
+    var chartDataAlunosCidade, chartDataCadastro;
+
+    google.load("visualization", "1", { packages: ['corechart', 'bar'] });
+
+    $(document).ready(function () {
+        loadGraficoAlunosCidade();
+        loadGraficoDataCadastro();
+    });
+
+    function loadGraficoAlunosCidade() {
+        $.ajax({
+            url: "GetChartDataAlunosCidade",
+            data: "",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; chartset=utf-8",
+            success: function (data) {
+                debugger;
+                chartDataAlunosCidade = data;
+            },
+            error: function () {
+                alert("Error loading data! Please try again.");
+            }
+        }).done(function () {
+            google.setOnLoadCallback(desenharGraficoAlunosCidade);
+            desenharGraficoAlunosCidade();
+        });
+    };
+
+    function loadGraficoDataCadastro() {
+        $.ajax({
+            url: "GetChartDataAlunosData",
+            data: "",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; chartset=utf-8",
+            success: function (data) {
+                debugger;
+                chartDataCadastro = data;
+            },
+            error: function () {
+                alert("Error loading data! Please try again.");
+            }
+        }).done(function () {
+            google.setOnLoadCallback(desenharGraficoDataCadastro);
+            desenharGraficoDataCadastro();
+        });
+    };
+
+    function desenharGraficoAlunosCidade() {
+        debugger;
+        var data = google.visualization.arrayToDataTable(chartDataAlunosCidade);
+        var options = {
+            title: "Alunos Cadastrados/Cidade",
+            pointSize: 10
+        };
+        var barChart = new google.visualization.ColumnChart(document.getElementById('graficoAlunosCidade'));
+        barChart.draw(data, options);
+    };
+
+    function desenharGraficoDataCadastro() {
+        debugger;
+        var data = google.visualization.arrayToDataTable(chartDataCadastro);
+        var options = {
+            title: "Alunos Cadastrados/Data",
+            pointSize: 10
+        };
+        var barChart = new google.visualization.ColumnChart(document.getElementById('graficoCadastroData'));
+        barChart.draw(data, options);
+    }
+</script>
